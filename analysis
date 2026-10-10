@@ -1,0 +1,50 @@
+@'
+CREATE DATABASE MovieAnalyticsDB;
+USE MovieAnalyticsDB;
+
+CREATE TABLE Movies (
+    MovieID INT PRIMARY KEY,
+    Title VARCHAR(100),
+    Genre VARCHAR(50),
+    ReleaseYear INT,
+    Rating DECIMAL(3,1),
+    Budget BIGINT,
+    Revenue BIGINT
+);
+
+INSERT INTO Movies VALUES
+(1, 'Inception', 'Sci-Fi', 2010, 8.8, 160000000, 839000000),
+(2, 'Interstellar', 'Sci-Fi', 2014, 8.7, 165000000, 731000000),
+(3, 'The Dark Knight', 'Action', 2008, 9.0, 185000000, 1005000000),
+(4, 'Avengers Endgame', 'Action', 2019, 8.4, 356000000, 2799000000),
+(5, 'Joker', 'Drama', 2019, 8.3, 55000000, 1074000000),
+(6, 'Titanic', 'Romance', 1997, 7.9, 200000000, 2264000000),
+(7, 'Avatar', 'Sci-Fi', 2009, 7.9, 237000000, 2923000000),
+(8, 'The Batman', 'Action', 2022, 7.8, 185000000, 772000000),
+(9, 'Oppenheimer', 'Drama', 2023, 8.3, 100000000, 975000000),
+(10, 'Dune Part Two', 'Sci-Fi', 2024, 8.5, 190000000, 714000000);
+
+SELECT Title, Genre, Rating
+FROM Movies
+WHERE Rating >= 8.5
+ORDER BY Rating DESC;
+
+SELECT Genre, COUNT(*) AS TotalMovies, ROUND(AVG(Rating), 2) AS AverageRating
+FROM Movies
+GROUP BY Genre
+ORDER BY AverageRating DESC;
+
+SELECT Title, Budget, Revenue, Revenue - Budget AS Profit
+FROM Movies
+ORDER BY Profit DESC;
+
+SELECT ReleaseYear, COUNT(*) AS MoviesReleased, SUM(Revenue) AS TotalRevenue
+FROM Movies
+GROUP BY ReleaseYear
+ORDER BY ReleaseYear;
+
+SELECT Title, Genre, Rating, Revenue
+FROM Movies
+WHERE Revenue > (SELECT AVG(Revenue) FROM Movies)
+ORDER BY Revenue DESC;
+'@ | Set-Content -Encoding utf8 Movie_Analytics.sql
